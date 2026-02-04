@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <title>AndrainaLogiTech | Pharmacie Pro</title>
 <link rel="stylesheet" href="style.css">
-<!-- Chart.js pour dashboard -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- SheetJS pour export Excel -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -22,7 +20,6 @@
 
 <!-- APP -->
 <div id="app" style="display:none">
-
 <nav>
   <span>💊 Pharmacie Pro</span>
   <button onclick="show('parametres')">⚙ Paramètres</button>
@@ -153,6 +150,10 @@
 <p>💰 Chiffre d'affaires : <span id="ca">0</span> Ar</p>
 <canvas id="chartCA" width="400" height="200"></canvas>
 <canvas id="chartStock" width="400" height="200"></canvas>
+<div>
+<h3>Chronologie des ventes</h3>
+<ul id="timeline"></ul>
+</div>
 </section>
 
 <script src="app.js"></script>
