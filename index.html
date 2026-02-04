@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>AndrainaLogiTech | Pharmacie Pro</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>AndrainaLogiTech | Pharmacie Pro</title>
+<link rel="stylesheet" href="style.css">
+<!-- Chart.js pour dashboard -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- SheetJS pour export Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -19,57 +23,137 @@
 <!-- APP -->
 <div id="app" style="display:none">
 
-  <nav>
-    <span>💊 Pharmacie Pro</span>
-    <button onclick="show('dashboard')">📊 Dashboard</button>
-    <button onclick="show('medicaments')">💊 Médicaments</button>
-    <button onclick="show('facture')">🧾 Facture</button>
-    <button onclick="logout()">🚪 Quitter</button>
-  </nav>
+<nav>
+  <span>💊 Pharmacie Pro</span>
+  <button onclick="show('parametres')">⚙ Paramètres</button>
+  <button onclick="show('medicaments')">💊 Médicaments</button>
+  <button onclick="show('clients')">👤 Clients</button>
+  <button onclick="show('medecins')">👨‍⚕ Médecins</button>
+  <button onclick="show('ordonnances')">📄 Ordonnances</button>
+  <button onclick="show('detailOrdo')">📋 Détail Ordonnances</button>
+  <button onclick="show('ventes')">💰 Ventes</button>
+  <button onclick="show('facture')">🧾 Facture</button>
+  <button onclick="show('dashboard')">📊 Tableau de Bord</button>
+  <button onclick="logout()">🚪 Quitter</button>
+</nav>
 
-  <!-- DASHBOARD -->
-  <section id="dashboard" class="page">
-    <h2>Tableau de bord</h2>
-    <p>💰 Chiffre d'affaires : <b><span id="ca">0</span> Ar</b></p>
-    <p>⚠️ Alertes stock :</p>
-    <ul id="alertStock"></ul>
-  </section>
+<!-- Paramètres -->
+<section id="parametres" class="page">
+<h2>Paramètres Pharmacie</h2>
+<input id="nomSociete" placeholder="Nom Société">
+<input id="adresseSociete" placeholder="Adresse">
+<input id="lieuSociete" placeholder="Lieu">
+<input id="tva" type="number" placeholder="TVA">
+<input id="dernierFacture" type="text" placeholder="Dernier Facture">
+<button onclick="saveParam()">Enregistrer</button>
+</section>
 
-  <!-- MEDICAMENTS -->
-  <section id="medicaments" class="page">
-    <h2>Médicaments</h2>
-    <input id="mNom" placeholder="Nom">
-    <input id="mPrix" type="number" placeholder="Prix">
-    <input id="mStock" type="number" placeholder="Stock">
-    <button onclick="addMed()">Ajouter</button>
+<!-- Médicaments -->
+<section id="medicaments" class="page">
+<h2>Médicaments</h2>
+<input id="codeMed" placeholder="Code Médicament">
+<input id="nomMed" placeholder="Nom">
+<input id="categorieMed" placeholder="Catégorie">
+<input id="formeMed" placeholder="Forme">
+<input id="dosageMed" placeholder="Dosage">
+<input id="expMed" type="date">
+<input id="stockMed" type="number">
+<input id="prixAchatMed" type="number" placeholder="Prix Achat">
+<input id="prixVenteMed" type="number" placeholder="Prix Vente">
+<input id="fournisseurMed" placeholder="Fournisseur">
+<button onclick="addMed()">Ajouter</button>
+<table><thead><tr><th>Code</th><th>Nom</th><th>Catégorie</th><th>Forme</th><th>Dosage</th><th>Exp</th><th>Stock</th><th>PA</th><th>PV</th><th>Fournisseur</th><th>Action</th></tr></thead>
+<tbody id="medTable"></tbody></table>
+<button onclick="exportExcel(meds,'medicaments.xlsx')">⬇ Export Excel</button>
+</section>
 
-    <table>
-      <thead>
-        <tr><th>Nom</th><th>Prix</th><th>Stock</th></tr>
-      </thead>
-      <tbody id="medTable"></tbody>
-    </table>
+<!-- Clients -->
+<section id="clients" class="page">
+<h2>Clients</h2>
+<input id="codeClient" placeholder="Code Client">
+<input id="nomClient" placeholder="Nom Client">
+<input id="telClient" placeholder="Téléphone">
+<input id="adresseClient" placeholder="Adresse">
+<input id="typeClient" placeholder="Type Client">
+<button onclick="addClient()">Ajouter</button>
+<table><thead><tr><th>Code</th><th>Nom</th><th>Tel</th><th>Adresse</th><th>Type</th><th>Action</th></tr></thead>
+<tbody id="clientTable"></tbody></table>
+<button onclick="exportExcel(clients,'clients.xlsx')">⬇ Export Excel</button>
+</section>
 
-    <button onclick="exportCSV(meds,'medicaments.csv')">⬇ Export CSV</button>
-  </section>
+<!-- Médecins -->
+<section id="medecins" class="page">
+<h2>Médecins</h2>
+<input id="codeMedecin" placeholder="Code Médecin">
+<input id="nomMedecin" placeholder="Nom">
+<input id="specMedecin" placeholder="Spécialité">
+<input id="telMedecin" placeholder="Téléphone">
+<button onclick="addMedecin()">Ajouter</button>
+<table><thead><tr><th>Code</th><th>Nom</th><th>Spécialité</th><th>Téléphone</th><th>Action</th></tr></thead>
+<tbody id="medecinTable"></tbody></table>
+<button onclick="exportExcel(medecins,'medecins.xlsx')">⬇ Export Excel</button>
+</section>
 
-  <!-- FACTURE -->
-  <section id="facture" class="page">
-    <h2>Facture</h2>
-    <select id="medSelect"></select>
-    <input id="qte" type="number" placeholder="Quantité">
-    <button onclick="addToFacture()">Ajouter</button>
+<!-- Ordonnances -->
+<section id="ordonnances" class="page">
+<h2>Ordonnances</h2>
+<input id="numOrdo" placeholder="Num Ordonnance">
+<input id="dateOrdo" type="date">
+<input id="nomPatient" placeholder="Nom Patient">
+<input id="codeMedecinOrdo" placeholder="Code Médecin">
+<input id="codeClientOrdo" placeholder="Code Client">
+<input id="observationOrdo" placeholder="Observation">
+<button onclick="addOrdo()">Ajouter</button>
+<table><thead><tr><th>Num</th><th>Date</th><th>Patient</th><th>CodeMed</th><th>CodeClient</th><th>Observation</th><th>Action</th></tr></thead>
+<tbody id="ordoTable"></tbody></table>
+<button onclick="exportExcel(ordonnances,'ordonnances.xlsx')">⬇ Export Excel</button>
+</section>
 
-    <div id="printZone">
-      <h3>PHARMACIE SANTÉ PLUS</h3>
-      <ul id="factureList"></ul>
-      <b>Total : <span id="total">0</span> Ar</b>
-    </div>
+<!-- Détail Ordonnances -->
+<section id="detailOrdo" class="page">
+<h2>Détail Ordonnances</h2>
+<input id="numOrdoDetail" placeholder="Num Ordonnance">
+<input id="codeMedDetail" placeholder="Code Med">
+<input id="nomMedDetail" placeholder="Nom Med">
+<input id="qteDetail" type="number" placeholder="Quantité">
+<input id="prixUDetail" type="number" placeholder="Prix U">
+<input id="totalDetail" type="number" placeholder="Total">
+<button onclick="addDetailOrdo()">Ajouter</button>
+<table><thead><tr><th>Num Ordo</th><th>Code Med</th><th>Nom</th><th>Qte</th><th>PU</th><th>Total</th><th>Action</th></tr></thead>
+<tbody id="detailOrdoTable"></tbody></table>
+<button onclick="exportExcel(detailOrdo,'detail_ordonnances.xlsx')">⬇ Export Excel</button>
+</section>
 
-    <button onclick="window.print()">🖨 Imprimer</button>
-  </section>
+<!-- Ventes -->
+<section id="ventes" class="page">
+<h2>Ventes</h2>
+<input id="numFacture" placeholder="Num Facture">
+<input id="dateFacture" type="date">
+<input id="codeClientFact" placeholder="Code Client">
+<input id="nomClientFact" placeholder="Nom Client">
+<input id="numOrdoFact" placeholder="Num Ordonnance">
+<input id="montantFact" type="number" placeholder="Montant">
+<input id="paiementFact" placeholder="Paiement">
+<button onclick="addVente()">Ajouter</button>
+<table><thead><tr><th>Num Facture</th><th>Date</th><th>Code Client</th><th>Nom Client</th><th>Num Ordo</th><th>Montant</th><th>Paiement</th><th>Action</th></tr></thead>
+<tbody id="venteTable"></tbody></table>
+<button onclick="exportExcel(ventes,'ventes.xlsx')">⬇ Export Excel</button>
+</section>
 
-</div>
+<!-- Facture -->
+<section id="facture" class="page">
+<h2>Facture</h2>
+<div id="printZone"></div>
+<button onclick="window.print()">🖨 Imprimer</button>
+</section>
+
+<!-- Tableau de bord -->
+<section id="dashboard" class="page">
+<h2>Tableau de bord</h2>
+<p>💰 Chiffre d'affaires : <span id="ca">0</span> Ar</p>
+<canvas id="chartCA" width="400" height="200"></canvas>
+<canvas id="chartStock" width="400" height="200"></canvas>
+</section>
 
 <script src="app.js"></script>
 </body>
