@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>AndrainaLogiTech | Pharmacie Pro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h1>AndrainaLogiTech</h1>
+  <input id="loginUser" placeholder="Utilisateur">
+  <input id="loginPass" type="password" placeholder="Mot de passe">
+  <button onclick="login()">Se connecter</button>
+  <p id="loginError"></p>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+  <nav>
+    <span>💊 Pharmacie Pro</span>
+    <button onclick="show('dashboard')">📊 Dashboard</button>
+    <button onclick="show('medicaments')">💊 Médicaments</button>
+    <button onclick="show('facture')">🧾 Facture</button>
+    <button onclick="logout()">🚪 Quitter</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="page">
+    <h2>Tableau de bord</h2>
+    <p>💰 Chiffre d'affaires : <b><span id="ca">0</span> Ar</b></p>
+    <p>⚠️ Alertes stock :</p>
+    <ul id="alertStock"></ul>
+  </section>
+
+  <!-- MEDICAMENTS -->
+  <section id="medicaments" class="page">
+    <h2>Médicaments</h2>
+    <input id="mNom" placeholder="Nom">
+    <input id="mPrix" type="number" placeholder="Prix">
+    <input id="mStock" type="number" placeholder="Stock">
+    <button onclick="addMed()">Ajouter</button>
+
+    <table>
+      <thead>
+        <tr><th>Nom</th><th>Prix</th><th>Stock</th></tr>
+      </thead>
+      <tbody id="medTable"></tbody>
+    </table>
+
+    <button onclick="exportCSV(meds,'medicaments.csv')">⬇ Export CSV</button>
+  </section>
+
+  <!-- FACTURE -->
+  <section id="facture" class="page">
+    <h2>Facture</h2>
+    <select id="medSelect"></select>
+    <input id="qte" type="number" placeholder="Quantité">
+    <button onclick="addToFacture()">Ajouter</button>
+
+    <div id="printZone">
+      <h3>PHARMACIE SANTÉ PLUS</h3>
+      <ul id="factureList"></ul>
+      <b>Total : <span id="total">0</span> Ar</b>
+    </div>
+
+    <button onclick="window.print()">🖨 Imprimer</button>
+  </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
